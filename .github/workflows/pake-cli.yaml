@@ -54,6 +54,8 @@ jobs:
     runs-on: ${{ inputs.platform }}
     strategy:
       fail-fast: false
+       matrix:
+       arch: [x64, ARM64]
 
     steps:
       - name: Checkout repository
@@ -64,33 +66,19 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Rust for ubuntu-20.04
-        if: inputs.platform == 'ubuntu-20.04'
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          target: x86_64-unknown-linux-musl
-
-      - name: Install Rust for windows-latest
-        if: inputs.platform == 'windows-latest'
+      - name: Install Rust for Windows x64
+        if: matrix.arch == 'x64'
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable-x86_64-msvc
           target: x86_64-pc-windows-msvc
 
-      - name: Install Rust for macos-latest
-        if: inputs.platform == 'macos-latest'
+      - name: Install Rust for Windows ARM64
+        if: matrix.arch == 'arm64'
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          target: x86_64-apple-darwin
-
-      - name: Install dependencies (ubuntu only)
-        if: inputs.platform == 'ubuntu-20.04'
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libjavascriptcoregtk-4.1-dev libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev gnome-video-effects gnome-video-effects-extra
-          version: 1.1
+          toolchain: stable-aarch64-msvc
+          target: aarch64-pc-windows-msvc
 
       - name: Install pake-cli local
         shell: bash
