@@ -49,9 +49,9 @@ on:
         type: boolean
         default: false
       targets:
-        description: "Targets, Linux only, Optional"
-        required: false
-        default: "deb"
+        description: "Targets, Optional"
+        required: true
+        default: "arm64"
         type: choice
         options:
           - "deb"
